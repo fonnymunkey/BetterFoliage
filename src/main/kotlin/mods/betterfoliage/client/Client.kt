@@ -1,7 +1,6 @@
 package mods.betterfoliage.client
 
 import mods.betterfoliage.BetterFoliageMod
-import mods.betterfoliage.client.chunk.ChunkOverlayManager
 import mods.betterfoliage.client.gui.ConfigGuiFactory
 import mods.betterfoliage.client.integration.*
 import mods.betterfoliage.client.render.*
@@ -58,17 +57,14 @@ object Client {
             RenderReeds(),
             RenderAlgae(),
             RenderCoral(),
-            RenderLog(),
             RenderNetherrack(),
-            RenderConnectedGrass(),
-            RenderConnectedGrassLog()
+            RenderConnectedGrass()
         )
 
         // init other singletons
         val singletons = listOf(
             StandardCactusRegistry,
             LeafParticleRegistry,
-            ChunkOverlayManager,
             LeafWindTracker,
             RisingSoulTextures
         )
@@ -77,15 +73,12 @@ object Client {
         val integrations = listOf(
             ShadersModIntegration,
             OptifineCustomColors,
-            ForestryIntegration,
-            IC2RubberIntegration,
-            TechRebornRubberIntegration
+            ForestryIntegration
         )
 
         // add basic block support instances as last
         GrassRegistry.addRegistry(StandardGrassRegistry)
         LeafRegistry.addRegistry(StandardLeafRegistry)
-        LogRegistry.addRegistry(StandardLogRegistry)
 
         // init config hotkey
         val configKey = KeyHandler(BetterFoliageMod.MOD_NAME, 66, "key.betterfoliage.gui") {

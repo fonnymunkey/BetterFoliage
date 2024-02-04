@@ -1,62 +1,71 @@
-apply plugin: "net.minecraftforge.gradle.forge"
-apply plugin: 'kotlin'
-
-archivesBaseName = jarName
-
 buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = 'https://maven.minecraftforge.net/'
+        }
+        maven {
+            url = 'https://maven.gofancy.wtf/releases'
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.40"
+        classpath group: 'wtf.gofancy.fancygradle', name: 'wtf.gofancy.fancygradle.gradle.plugin', version: '1.1.+'
     }
+}
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'kotlin'
+apply plugin: 'wtf.gofancy.fancygradle'
+
+version = "${version}"
+group = "${group}"
+archivesBaseName = jarName
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+fancyGradle {
+    patches {
+        resources
+        coremods
+    }
+}
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+
+    accessTransformer = file('src/main/resources/META-INF/BetterFoliage_at.cfg')
 }
 
 repositories {
     mavenCentral()
-    jcenter()
     maven {
-        name = "shadowfacts"
-        url = "https://maven.shadowfacts.net/"
+        url = "https://www.cursemaven.com"
     }
 }
 
+
 dependencies {
-    compile "net.shadowfacts:Forgelin:$forgelin_version"
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+
+    implementation fg.deobf("curse.maven:shadowfacts-forgelin-248453:2785465")
 }
 
-minecraft {
-    version = mc_version + "-" + forge_version
-    mappings = mcp_mappings
-    runDir = 'run'
-}
 processResources {
-    from(sourceSets.main.resources) { exclude 'mcmod.info' }
-    from(sourceSets.main.resources) { include 'mcmod.info' expand 'version':version, 'mcversion':minecraft.version }
+    inputs.property "version", version
+    inputs.property "mcversion", mc_version
 
-    into "${buildDir}/classes/main"
-}
-
-def manifestCfg = {
-    attributes "FMLCorePlugin": "mods.betterfoliage.loader.BetterFoliageLoader"
-    attributes "FMLCorePluginContainsFMLMod": "mods.betterfoliage.BetterFoliageMod"
-    attributes "FMLAT": "BetterFoliage_at.cfg"
+    filesMatching('mcmod.info') {
+        expand 'version': version, 'mcversion': mc_version
+    }
+    //into "${buildDir}/classes/main"
 }
 
 jar {
-    manifest manifestCfg
+    manifest {
+        attributes "FMLCorePlugin": "mods.betterfoliage.loader.BetterFoliageLoader"
+        attributes "FMLCorePluginContainsFMLMod": "mods.betterfoliage.BetterFoliageMod"
+        attributes "FMLAT": "BetterFoliage_at.cfg"
+    }
     exclude "optifine"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    manifest manifestCfg
-    from(sourceSets.main.kotlin)
-    from(sourceSets.main.resources) { exclude 'mcmod.info' }
-    from(sourceSets.main.resources) { include 'mcmod.info' expand 'version':version, 'mcversion':minecraft.version }
 }

@@ -2,18 +2,12 @@ package mods.betterfoliage.client.integration
 
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.Client
-import mods.betterfoliage.client.config.Config
-import mods.betterfoliage.client.render.LogRegistry
-import mods.betterfoliage.client.render.StandardLogRegistry
-import mods.betterfoliage.client.render.column.ColumnTextureInfo
-import mods.betterfoliage.client.render.column.SimpleColumnInfo
 import mods.betterfoliage.client.texture.LeafInfo
 import mods.betterfoliage.client.texture.LeafRegistry
 import mods.betterfoliage.client.texture.StandardLeafKey
 import mods.betterfoliage.loader.Refs
 import mods.octarinecore.client.resource.ModelRenderKey
 import mods.octarinecore.client.resource.ModelRenderRegistry
-import mods.octarinecore.client.resource.ModelRenderRegistryBase
 import mods.octarinecore.getTileEntitySafe
 import mods.octarinecore.metaprog.ClassRef
 import mods.octarinecore.metaprog.FieldRef
@@ -21,12 +15,10 @@ import mods.octarinecore.metaprog.MethodRef
 import mods.octarinecore.metaprog.allAvailable
 import net.minecraft.block.state.IBlockState
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.client.event.TextureStitchEvent
-import net.minecraftforge.client.model.IModel
 import net.minecraftforge.fml.common.Loader
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -57,11 +49,6 @@ object ForestryIntegration {
     val TileLeaves = ClassRef("forestry.arboriculture.tiles.TileLeaves")
     val TiLgetLeaveSprite = MethodRef(TileLeaves, "getLeaveSprite", Refs.ResourceLocation, ClassRef.boolean)
 
-    val PropertyWoodType = ClassRef("forestry.arboriculture.blocks.PropertyWoodType")
-    val IWoodType = ClassRef("forestry.api.arboriculture.IWoodType")
-    val barkTex = MethodRef(IWoodType, "getBarkTexture", Refs.String)
-    val heartTex = MethodRef(IWoodType, "getHeartTexture", Refs.String)
-
     val PropertyTreeType = ClassRef("forestry.arboriculture.blocks.PropertyTreeType")
     val TreeDefinition = ClassRef("forestry.arboriculture.genetics.TreeDefinition")
     val IAlleleTreeSpecies = ClassRef("forestry.api.arboriculture.IAlleleTreeSpecies")
@@ -74,7 +61,6 @@ object ForestryIntegration {
         if (Loader.isModLoaded("forestry") && allAvailable(TiLgetLeaveSprite, getLeafSpriteProvider, getSprite)) {
             Client.log(Level.INFO, "Forestry support initialized")
             LeafRegistry.addRegistry(ForestryLeafRegistry)
-            LogRegistry.addRegistry(ForestryLogRegistry)
         }
     }
 }
@@ -125,30 +111,5 @@ object ForestryLeafRegistry : ModelRenderRegistry<LeafInfo> {
     fun handlePostStitch(event: TextureStitchEvent.Post) {
         textureToValue = textureToKey.mapValues { (_, key) -> key.resolveSprites(event.map) }
         textureToKey.clear()
-    }
-}
-
-object ForestryLogRegistry : ModelRenderRegistryBase<ColumnTextureInfo>() {
-    override val logger = BetterFoliageMod.logDetail
-
-    override fun processModel(state: IBlockState, modelLoc: ModelResourceLocation, model: IModel): ModelRenderKey<ColumnTextureInfo>? {
-        // respect class list to avoid triggering on fences, stairs, etc.
-        if (!Config.blocks.logClasses.matchesClass(state.block)) return null
-
-        // find wood type property
-        val woodType = state.properties.entries.find {
-            ForestryIntegration.PropertyWoodType.isInstance(it.key) && ForestryIntegration.IWoodType.isInstance(it.value)
-        } ?: return null
-
-        logger.log(Level.DEBUG, "ForestryLogRegistry: block state $state")
-        logger.log(Level.DEBUG, "ForestryLogRegistry:     variant ${woodType.value}")
-
-        // get texture names for wood type
-        val bark = ForestryIntegration.barkTex.invoke(woodType.value) as String?
-        val heart = ForestryIntegration.heartTex.invoke(woodType.value) as String?
-
-        logger.log(Level.DEBUG, "ForestryLogSupport:    textures [heart=$heart, bark=$bark]")
-        if (bark != null && heart != null) return SimpleColumnInfo.Key(logger, StandardLogRegistry.getAxis(state), listOf(heart, heart, bark))
-        return null
     }
 }

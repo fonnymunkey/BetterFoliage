@@ -31,22 +31,19 @@ var isAfterPostInit = false
 val isOptifinePresent = allAvailable(Refs.OptifineClassTransformer)
 
 fun doesSideBlockRenderingOverride(original: Boolean, blockAccess: IBlockAccess, pos: BlockPos, side: EnumFacing): Boolean {
-    return original && !(Config.enabled && Config.roundLogs.enabled && Config.blocks.logClasses.matchesClass(blockAccess.getBlockState(pos).block));
+    return original;
 }
 
 fun isOpaqueCubeOverride(original: Boolean, state: IBlockState): Boolean {
-    // caution: blocks are initialized and the method called during startup
-    if (!isAfterPostInit) return original
-    return original && !(Config.enabled && Config.roundLogs.enabled && Config.blocks.logClasses.matchesClass(state.block))
+    return original;
 }
 
 fun getAmbientOcclusionLightValueOverride(original: Float, state: IBlockState): Float {
-    if (Config.enabled && Config.roundLogs.enabled && Config.blocks.logClasses.matchesClass(state.block)) return Config.roundLogs.dimming;
     return original;
 }
 
 fun getUseNeighborBrightnessOverride(original: Boolean, state: IBlockState): Boolean {
-    return original || (Config.enabled && Config.roundLogs.enabled && Config.blocks.logClasses.matchesClass(state.block));
+    return original;
 }
 
 fun onRandomDisplayTick(world: World, state: IBlockState, pos: BlockPos) {
