@@ -1,6 +1,7 @@
 package mods.betterfoliage.client
 
 import mods.betterfoliage.BetterFoliageMod
+import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.gui.ConfigGuiFactory
 import mods.betterfoliage.client.integration.*
 import mods.betterfoliage.client.render.*
@@ -103,7 +104,7 @@ object Client {
 
         val blockName = Block.REGISTRY.getNameForObject(state.block).toString()
         val blockLoc = "${location.x},${location.y},${location.z}"
-        Minecraft.getMinecraft().ingameGUI.chatGUI.printChatMessage(TextComponentTranslation(
+        if (Config.logRenderErrorToChat) Minecraft.getMinecraft().ingameGUI.chatGUI.printChatMessage(TextComponentTranslation(
             "betterfoliage.rendererror",
             textComponent(blockName, TextFormatting.GOLD),
             textComponent(blockLoc, TextFormatting.GOLD)

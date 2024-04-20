@@ -32,6 +32,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
     var enabled by boolean(true)
     var nVidia by boolean(GL11.glGetString(GL11.GL_VENDOR).toLowerCase().contains("nvidia"))
+    var logRenderErrorToChat by boolean(false)
 
     object shaders {
         val leavesId by long(min = 1, max = 65535, default = ShadersModIntegration.leavesDefaultBlockId.toInt())
