@@ -108,6 +108,13 @@ betterfoliage.blocks.netherrackBlacklist.arrayEntry=%d entries
 betterfoliage.blocks.netherrackWhitelist.tooltip=Blocks recognized as Netherrack. Has an impact on Netherrack Vines
 betterfoliage.blocks.netherrackBlacklist.tooltip=Blocks never accepted Netherrack. Has an impact on Netherrack Vines
 
+betterfoliage.blocks.packedIceWhitelist=Packed Ice Whitelist
+betterfoliage.blocks.packedIceBlacklist=Packed Ice Blacklist
+betterfoliage.blocks.packedIceWhitelist.arrayEntry=%d entries
+betterfoliage.blocks.packedIceBlacklist.arrayEntry=%d entries
+betterfoliage.blocks.packedIceWhitelist.tooltip=Blocks recognized as Packed Ice. Has an impact on Packed Ice Spikes
+betterfoliage.blocks.packedIceBlacklist.tooltip=Blocks never accepted Packed Ice. Has an impact on Packed Ice Spikes
+
 betterfoliage.shaders=Shader configuration
 betterfoliage.shaders.tooltip=Configure integration with shaders
 betterfoliage.shaders.leavesId=Leaves ID
@@ -180,6 +187,9 @@ betterfoliage.coral.shallowWater.tooltip=Should coral appear in 1 block deep wat
 
 betterfoliage.netherrack=Netherrack Vines
 betterfoliage.netherrack.tooltip=Hanging Vines under netherrack
+
+betterfoliage.packedIce=Packed Ice Spikes
+betterfoliage.packedIce.tooltip=Spikes under packed ice
 
 betterfoliage.fallingLeaves=Falling leaves
 betterfoliage.fallingLeaves.tooltip=Falling leaf particle FX emitted from the bottom of leaf blocks

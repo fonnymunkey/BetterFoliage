@@ -59,6 +59,7 @@ object Client {
             RenderAlgae(),
             RenderCoral(),
             RenderNetherrack(),
+            RenderPackedIce(),
             RenderConnectedGrass()
         )
 

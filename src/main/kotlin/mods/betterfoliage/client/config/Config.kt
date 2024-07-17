@@ -53,6 +53,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val lilypad = ConfigurableBlockMatcher(BetterFoliageMod.DOMAIN, "lilypad_default.cfg")
         val cactus = ConfigurableBlockMatcher(BetterFoliageMod.DOMAIN, "cactus_default.cfg")
         val netherrack = ConfigurableBlockMatcher(BetterFoliageMod.DOMAIN, "netherrack_blocks_default.cfg")
+        val packedIce = ConfigurableBlockMatcher(BetterFoliageMod.DOMAIN, "packedice_blocks_default.cfg")
 
         val leavesWhitelist = OBSOLETE
         val leavesBlacklist = OBSOLETE
@@ -150,6 +151,14 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val heightMin by double(min=0.1, max=1.5, default=0.6).lang("heightMin")
         val heightMax by double(min=0.1, max=1.5, default=0.8).lang("heightMax")
         val size by double(min=0.5, max=1.5, default=1.0).lang("size")
+    }
+
+    object packedIce {
+        val enabled by featureEnable()
+        val hOffset by double(max=0.4, default=0.1).lang("hOffset")
+        val heightMin by double(min=0.1, max=1.5, default=1.0).lang("heightMin")
+        val heightMax by double(min=0.1, max=1.5, default=1.5).lang("heightMax")
+        val population by int(max=64, default=16).lang("population")
     }
 
     object fallingLeaves {
